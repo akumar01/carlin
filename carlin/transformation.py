@@ -88,7 +88,7 @@ from carlin.io import get_Fj_from_model
 from carlin.polynomial_ode import PolynomialODE
 
 # Toolbox for operations on polytopes
-from polyhedron_tools.misc import polyhedron_to_Hrep, chebyshev_center, radius
+# from polyhedron_tools.misc import polyhedron_to_Hrep, chebyshev_center, radius
 
 # Sage objects: Rings, Polynomials, Linear algebra
 from sage.rings.all import RR, QQ
@@ -489,53 +489,26 @@ def linearize(model, N, x0, **kwargs):
 
     dic['log_norm_F1_inf'] = ch['log_norm_F1_inf']
 
-    if 'polyhedron' in str(type(x0)):
-        from polyhedron_tools.misc import radius, polyhedron_to_Hrep
-        [Fx0, gx0] = polyhedron_to_Hrep(x0)
-        norm_initial_states = radius([Fx0, gx0])
-        if (norm_initial_states >= 1):
-            norm_x0_hat = norm_initial_states**(k-1)
-        elif (norm_initial_states < 1):
-            norm_x0_hat = norm_initial_states
 
-        # when the initial set is a polytope, this is the maximum norm
-        # of the initial states in the lifted (quadratic) system
-        dic['norm_x0_tilde'] = norm_x0_hat
 
-        beta0 = ch['beta0_const']*norm_x0_hat
-        dic['beta0'] = beta0
+    #x0_hat = [kron_power(x0, i+1) for i in range(k-1)]
+    #transform to flat list
+    #x0_hat = [item for sublist in x0_hat for item in sublist]
+    #norm_x0_hat = np.linalg.norm(x0_hat, ord=inf)
 
-        Ts = 1./norm_F1_tilde*log(1+1./beta0)
-        dic['Ts'] = Ts
+    #use crossnorm property
+    nx0 = np.linalg.norm(x0, ord=inf)
+    norm_x0_hat = max([nx0**i for i in range(1, k)])
 
-        [F, g] = polyhedron_to_Hrep(x0)
+    dic['norm_x0_tilde'] = norm_x0_hat
 
-        #dic['F'] = F; dic['g'] = g.column()
-        dic['x0'] = {'F' : F, 'g' : g.column()}
+    beta0 = ch['beta0_const']*norm_x0_hat
+    dic['beta0'] = beta0
 
-        cheby_center_X0 = chebyshev_center(x0)
-        dic['x0_cc'] = vector(cheby_center_X0).column()
+    Ts = 1/norm_F1_tilde*log(1+1/beta0)
+    dic['Ts'] = Ts
 
-    else: # assuming that x0 is a list object
-
-        #x0_hat = [kron_power(x0, i+1) for i in range(k-1)]
-        #transform to flat list
-        #x0_hat = [item for sublist in x0_hat for item in sublist]
-        #norm_x0_hat = np.linalg.norm(x0_hat, ord=inf)
-
-        #use crossnorm property
-        nx0 = np.linalg.norm(x0, ord=inf)
-        norm_x0_hat = max([nx0**i for i in range(1, k)])
-
-        dic['norm_x0_tilde'] = norm_x0_hat
-
-        beta0 = ch['beta0_const']*norm_x0_hat
-        dic['beta0'] = beta0
-
-        Ts = 1/norm_F1_tilde*log(1+1/beta0)
-        dic['Ts'] = Ts
-
-        dic['x0'] = vector(x0).column()
+    dic['x0'] = vector(x0).column()
 
 
     # if required, write additional data from dictionary

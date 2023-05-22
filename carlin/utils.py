@@ -14,7 +14,7 @@ from scipy.sparse import kron, eye
 import scipy.sparse.linalg
 
 # Toolbox for operations on polytopes
-from polyhedron_tools.misc import polyhedron_to_Hrep, chebyshev_center, radius
+# from polyhedron_tools.misc import polyhedron_to_Hrep, chebyshev_center, radius
 
 # Sage objects: Rings, Polynomials, Linear algebra and all that
 from sage.rings.all import RR, QQ
