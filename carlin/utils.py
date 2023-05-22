@@ -67,7 +67,7 @@ def get_key_from_index(i, j, n):
     x = polygens(QQ, ['x'+str(1+k) for k in range(n)])
     x_power_j = kron_power(x, j)
     d = x_power_j[i].dict()
-    return list(d.items()[0][0])
+    return list(list(d.items())[0][0])
 
 def get_index_from_key(key, j, n):
     r"""
@@ -99,7 +99,7 @@ def get_index_from_key(key, j, n):
     x_power_j = kron_power(x, j)
 
     for i, monomial in enumerate(x_power_j):
-        if ( list(monomial.dict().keys()[0]) == key):
+        if ( list(list(monomial.dict().keys())[0]) == key):
             first_occurence = i
             break
 
