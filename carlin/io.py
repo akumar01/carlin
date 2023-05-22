@@ -188,7 +188,7 @@ def get_Fj_from_model(model_filename=None, f=None, n=None, k=None):
         from carlin.transformation import get_index_from_key
         
         for i, dictionary_f_i in enumerate(dictionary_f):
-            for key in dictionary_f_i.iterkeys():
+            for key in dictionary_f_i.keys():
                 row = i;
                 j = sum(key)
                 column = get_index_from_key(list(key), j, n)
@@ -198,7 +198,7 @@ def get_Fj_from_model(model_filename=None, f=None, n=None, k=None):
         #the scalar case is treated separately. the problem arises from using
         #sum(1) (note it doesn't break if one uses from scipy import sum)
         for i, dictionary_f_i in enumerate(dictionary_f):
-            for key in dictionary_f_i.iterkeys():
+            for key in dictionary_f_i.keys():
                 row = i;
                 j = key
                 column = 0 # because Fj are 1x1 in the scalar case
