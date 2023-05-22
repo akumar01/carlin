@@ -427,7 +427,7 @@ def plot_error_function(model_filename, N, x0, Tfrac=0.8):
 # Functions to export Carleman linearization
 #===============================================
 
-def linearize(model, target_filename, N, x0, **kwargs):
+def linearize(model, N, x0, **kwargs):
     r"""
     Compute Carleman linearization and export to a MAT file.
 
@@ -453,33 +453,33 @@ def linearize(model, target_filename, N, x0, **kwargs):
     dic['model_name'] = model
     dic['N'] = N
 
-    print 'Obtaining the canonical representation...',
+    print('Obtaining the canonical representation...')
 
     if isinstance(model, str):
         [F, n, k] = get_Fj_from_model(model)
     elif isinstance(model, PolynomialODE):
         [F, n, k] = get_Fj_from_model(model.funcs(), model.dim(), model.degree())
-    print 'done'
+    print ('done')
 
     dic['n'] = n
     dic['k'] = k
 
-    print 'Computing matrix AN...',
+    print('Computing matrix AN...')
     if isinstance(model, str):
         A_N = truncated_matrix(N, model)
     elif isinstance(model, PolynomialODE):
         A_N = truncated_matrix(N, F, n, k, input_format="Fj_matrices")
-    print 'done'
+    print('done')
 
     dic['AN'] = A_N
 
-    print 'Computing the quadratic reduction...',
+    print('Computing the quadratic reduction...',)
     [Fquad, nquad, kquad] = quadratic_reduction(F, n, k)
-    print 'done'
+    print('done')
 
-    print 'Computing the characteristics of the model...',
+    print('Computing the characteristics of the model...',)
     ch = characteristics(Fquad, nquad, kquad);
-    print 'done'
+    print('done')
 
     norm_F1_tilde = ch['norm_Fi_inf'][0]
     norm_F2_tilde = ch['norm_Fi_inf'][1]
@@ -554,11 +554,11 @@ def linearize(model, target_filename, N, x0, **kwargs):
                 new_key = new_data.pop('name')
                 dic[new_key] = new_data
 
-    print 'Exporting to ', target_filename, '...',
-    savemat(target_filename, dic)
-    print 'done'
+    # print('Exporting to ', target_filename, '...',)
+    # savemat(target_filename, dic)
+    # print('done')
 
-    return
+    return dic
 
 #===============================================
 # Auxiliary mathematical functions
